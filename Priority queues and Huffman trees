@@ -1,0 +1,170 @@
+Priority queues are implemented using MAX and MIN HEAPS. MAX PRIORITY QUEUES are used to manage things like printing jobs accross a network.
+MIN PRIORITY QUEUES may be used to render graphics in a particular order.
+
+Max heap = Parents are greater than or equal to their children
+Min heap = Parents are smaller than or equal to their children
+
+//Pseudocode for MAX PRIORITY QUEUE
+
+HEAP-MAXIMUM(A)
+    RETURN A[1]
+ 
+HEAP-EXTRACT-MAX[A] // return the max key (root), but maintain the max heap property  O(lgn)
+IF A.heap-size < 1
+error "underflow" //if no heap then underflow
+max = A[1] // set var max = root (largest key)
+A[1] = A[A.heap-size] //set root to last key(one of smallest)
+A.heap-size = A.heap-size - 1 //disconnect last key from heap
+MAX-HEAPIFY(A, 1) //move the new root down to its correct position and restore max heap property
+return max //return extracted key
+
+HEAP-INCREASE-KEY(A, node, key) //change a key and then move it (if needed) to main max heap property
+if key < A[node]
+    error "new key is smaller than existing key!"
+A[node] = key
+while A[node.parent] < A[node]
+    swap A[node] with A[node.parent]
+    A = A.parent
+
+MAX-HEAP-INSERT(A, key) //insert new key and move it (if needed) to main max heap property
+    A.heapsize = A.heap-size + 1
+    A[A.heapsize] = -infinity
+    HEAP-INCREASE-KEY(A, A.heapsize, key)
+
+
+//Pseudocode for MIN PRIORITY QUEUE
+
+HEAP-MINIMUM(A)
+    RETURN A[1]
+
+HEAP-EXTRACT-MIN[A] //read comments above (heap-extract-max)
+    IF A.heap-size < 1
+        error "underflow"
+    min = A[1]
+    A[1] = A[A.heap-size]
+    A.heap-size = A.heap-size - 1
+    MIN-HEAPIFY(A, 1)
+    return max
+    
+
+HEAP-DECREASE-KEY(A, node, key) //read comments above for heap-increase-key
+    if key > A[node]
+        error "new key is larger than existing key!"
+    A[node] = key
+    while A[node.parent] > A[node]
+        swap A[node] with A[node.parent]
+        A = A.parent
+
+
+MIN-HEAP-INSERT(A, key)
+    A.heapsize = A.heap-size + 1
+    A[A.heapsize] = infinity
+    HEAP-DECREASE-KEY(A, A.heapsize, key)    
+
+
+-----------------------------------------------------
+
+//HUFFMAN CODES
+
+fixed-length code = all values have the same length binary strings
+
+variable-length code = values can have binary strings of differing lengths
+                     = encode files using fewer bits
+
+prefix code = binary strings that have NO "prefix". individuals strings are uniquely parsable
+            = less bits as no prefix "binary tree perfect for prefix codes as all simple paths are unique"
+
+"binary tree provides prefix codes as leaves can be characters"
+
+//optimal code is represented by full binary tree(every internal node has 2 children)
+
+
+HUFFMAN(C) //C is a set of n characters
+n = |C|
+Q = C  //min priority queue (smallest to largest) (think of a min heap)
+for i=1 to n-1 //runs through elements in queue
+    allocate a new node z //creat new node and set left/right children to smallest keys in the queue
+    z.left = x = EXTRACT-MIN(Q)  
+    z.right = y = EXTRACT-MIN(Q)
+    z.freq = x.freq + y.freq //set the key of node z to total frequency of its children
+    INSERT(Q, z) //insert the key of z back into the queue so that it can be selected in the next iterations (this will allow the tree to be build)
+return EXTRACT-MIN(Q) //return the root of the tree
+
+running time = O(nlgn)
+building heap takes logn
+for loop takes n
+
+Cost of tree = for each element c sum of all(c.freq * depth of c)
+
+Huffman is greedy because it chooses the most frequent keys first, giving them the shortest path. 
+    The least frequent keys are chosen last, giving them the longest paths.
+
+"each simple path in a binary tree is unique, making it perfect for prefix codes"
+
+//EXAMPLE OF HUFFMAN TREE
+
+character   freq    fixed code
+    a         20        001
+    b         5         011
+    c         10        111        TOTAL BITES NEEDED
+    d         2         100             150
+    e         10        110
+    f         3         101
+
+//build a min-heap (first 2 lines of huffman)
+
+          2d
+    3f         5b
+10c   10e    20a
+
+//build the tree and show the min-heap after each iteration
+
+//huffmantree first iteration(i=1)    min-heap  Orange keys are new nodes (z) (sum of two childrens keys)
+   "5"                                      5b
+2d    3f                                10c    "5"             
+                                      20a     10e                              
+
+//after another iteration i=2                                                      
+      "10"                                   10c                
+    5b     5                             "10"   10e             
+         2d  3f                        20a                 
+
+//another iteration i=3
+
+         "20"                                 10e
+    10c        10                          20a  "20"
+            5b     5
+                 2d  3f
+
+//another iteration i=4 this time we have 2 huffman trees
+
+     "20"                   "30"                   "30"
+10c        10             10e   20a                   "20"
+        5b     5
+             2d  3f             
+
+
+//final iteration i= n-1 = 5
+
+                  50
+           30            20
+        10e   20a    10c     10
+                          5b    5
+                              2d 3f
+
+
+Here we have our complete huffman tree. Least frequent chars are on the longest simple paths
+                                        Most frequent are on shortest path
+
+
+Going left = 1,  going right = 0
+
+character   freq     var code
+    a         20        10
+    b         5         001
+    c         10        01        TOTAL BITES NEEDED
+    d         2         0001             115
+    e         10        11
+    f         3         0000
+
+

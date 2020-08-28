@@ -1,0 +1,150 @@
+Binary search tree is organised in a binary tree.
+
+The main property is that if we take a node, n. 
+
+                        n
+                      /   \
+                     /     \
+                    /       \
+            smaller than   larger than
+            or =  n         or = n
+
+
+Each node contains properties:
+
+LEFT-CHILD
+RIGHT-CHILD
+P - parent
+
+"Minimum elements in ANY tree" = 2^h
+
+"Maximum elements in ANY tree" = 2^(h+1)  - 1
+
+
+--------------------
+IF a node in a binary tree has 2 children:
+
+- its successor has no left child
+- its predecessor has no right child
+------------------------
+
+Inorder tree walk = print all keys in sorted order:
+
+INORDER-TREE-WALK (x) // left, middle, right
+1    if x!= NIL
+2        INORDER-TREE-WALK(x.left)
+3        print x.key 
+4        INORDER-TREE-WALK(x.right)
+
+PREORDER-TREE-WALK (x) // middle left right - used to make copy of tree
+1    if x!= NIL
+3        print x.key
+2        PREORDER-TREE-WALK(x.left)
+4        PREORDER-TREE-WALK(x.right)
+
+
+TREE-SUCCESSOR (x)
+    if x.right != null //if x has a right subtree then successor of x will be smallest value in its right subtree
+        return TREE-MINIMUM (x.right)
+    else if x.parent == null
+        return Error "no sucessor"
+    y = x.parent //if x has no right tree subtree...
+    while y.right == x
+        x = y
+        y = y.parent
+    return y
+
+TREE-PREDECCESOR (x)
+    if x.left != null
+        return TREE-MAXIUMUM (x.left)
+    else if x.parent == null
+        return Error "no sucessor"
+    y = x.parent
+    while y.left == x
+        x = y
+        y = y.parent
+    return y
+
+ITERATIVE MIN/MAX
+
+TREE-FINDMIN (x) //keep going left until you reach a leaf
+    while x.left != null
+    x = x.left
+return x
+
+TREE-FINDMAX (x) //keep going right until you reach a leaf
+    while x.right != null
+    x = x.right
+return x
+
+
+RECURSIVE MIN/MAX
+
+TREE-RECURSIVE-FINDMIN
+  if x.left != null
+    TREE-RECURSIVE-FINDMIN(x.left)
+  return x
+
+  TREE-RECURSIVE-FINDMAX
+  if x.right != null
+    TREE-RECURSIVE-FINDMAX(x.right)
+  return x
+
+
+
+TREE-RECURSIVESEARCH (x, k) //x = root, k = key to be found
+    if x.key == k
+        return x
+    if k < x.key
+        return TREE-RECURSIVESEARCH(x.left, k)
+    else return TREE-RECURSIVESEARCH(x.right, k)
+
+
+TREE-ITERATIVESEARCH (x, k) //x = root, k = key to be found
+    while x.key != k //while key of x is not k we do the loop
+        if k < x.key // if key is smaller than x.key then we go left, if not we go right
+            x = x.left
+        else x = x.right
+    return x
+
+TREE-INSERT(T,z) //T = tree, z = key to insert
+    y = null //pair of pointers
+    x = T.root // x traverses ahead | y trails behind
+    while x != null
+        y = x
+        if z < x.key
+            x = x.left
+        else x = x.right
+    if z < y   
+        y.left = z
+    else y.right = z
+
+TREE-SEARCH = O(n)
+TREE-MAX/MIN = O(h)
+TREE-SUCCESSOR/PREDECESSOR = O(h)
+
+
+TREE DELETE
+
+TRANSPLANT (T, u, v)
+if u.p == NIL 
+  T.root = v
+elseif u == u.p.left 
+  u.p.left = v
+else u.p.right = v 
+if v != NIL
+  v.p = u.p
+
+TREE-DELETE(T, z)
+if z.left == NIL 
+  TRANSPLANT(T, z, z.right)
+elseif z.right == NIL 
+  TRANSPLANT(T, z, z.left)
+else y = TREE-MINIMUM(z.right)
+  if y.p != z    
+    TRANSPLANT(T, y, y.right)
+    y.right =  Z.right
+    y.right.p = y
+  TRANSPLANT(T, z, y)
+  y.left = z.left 
+  y.left.p = y

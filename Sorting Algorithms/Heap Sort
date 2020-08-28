@@ -1,0 +1,168 @@
+MAX-HEAPIFY(A,i) // A is the array to be inputted. i is the index of the key in the array that might be SMALLER (not bigger) than children
+    l = LEFT(i) 
+    r = RIGHT(i) // if i = 2, then l = 4, and r = 5. i = parent and l and r = two children
+if l <= A.heap-size and A[l] > A[i] //"if l<= A.heap-size" - checks to see left child (l) of i exists (if l is more than a.heap-size then it doesnt exist). If it does...then we check if left child (A[l]) is bigger than its parent (A[i])
+    largest = l //if parent (i) has a left child (l), and the left childs key (A[l]) is bigger than its parents key (A[i]), then we set the left childs index (l) to the value of largest
+else largest = i //if parent (i) DOESNT have a child (l), or the child (l) exists but its key (A[l]) is already smaller than its parents key (A[i]), then we set the parents key(i) to the value of largest
+if r <= A.heap-size and A[r] > A[largest] //first condition checks to see if right child (r) exists (it doesnt if r > heapsize). Second condition checks if key of right child (A[r]) is bigger than key of largest out of key of parent and left child
+    largest = r //if right child exists and its key is largest than left child and parent, then key of right child set to largest
+if largest != i // if largest key out of parent, left and right child IS NOT the parent, 
+    exchange A[i] with A[largest] //then we swap the key of parent with the key of the largest (left or right child)
+    MAX-HEAPIFY(A, largest) //if the parents key if swapped with one of its children, then we have to make recursive call back to the function to make sure that the parents key is larger than its two NEW children.
+                            //this algorithm repeats until the parent is the largest compared with its children. if a parent has no children, then it will be set to largest by default, and thus the recursive call will not execute and the function will end.
+
+Worst case = T(n) =c(lgn +1) = Ө(lgn).
+The best case is that heap property is already in place so the time cost is constant Ө(1)
+
+BUILD-MAX-HEAP(A) //this is the function that takes any array and coverts it into a max heap. remember that a max heap is not a fully sorted array, as nodes on the same depth are not in sorted order
+1 A.heap-size = A.length //set the length of the heap to the length of the array
+2 for i = |_A.length/2_| downto 1 // we call max-heapify on all of the nodes that have children, starting with the bottom nodes and working our way up. The lowest node with children (internal node) will always be the floor of the (array size/2)
+3   MAX-HEAPIFY(A,i)                                                                                                                 //we dont need to perform max-heapify on external nodes (leafs) as they dont have children and are already max heaps.
+
+Time cost = O(n)
+//if build-max-heap is unclear - quickly go to the textbook page 155 and look at the figure.
+
+HEAPSORT(A) //this algorithm is the one that completely sorts an array in decresing order.
+BUILD-MAX-HEAP(A) //first we call the build-max-heap function on our array to convert our unsorted array into a max heap. Remeber an array represented as a max heap IS NOT FULLY SORTED. **BUT: A[1] IS THE LARGEST KEY**
+for i = A.length downto 2 //we make a for loop that starts with the last node in the heap, and moves from there up the tree to the left child of the root.
+    exchange A[1] with A[i] //we swap the root of the heap (THE LARGEST VALUE), with i, which is the last node to the left child of root.
+    A.heap-size = A.heap-size - 1 // once we have swapped A[1] (THE LARGEST element) with A[i], the last element. We then "protect" it by reducing the heap size by 1. This means the last element in the array is the largest, and cannot be changed by
+    MAX-HEAPIFY(A,1)//we call max-heapify on the root of heap, which is one of the smallest nodes, so that it can "trickle" back down.                               // and the number of sorted elements at the end of the array get larger.                                                                                                                                                //any ongoing operations. As the foor loop repeats, the heap size gets smaller
+
+The HEAPSORT procedure takes time O(n lg n),
+since the call to BUILD-MAX- HEAP takes time O(n) 
+and each of the n - 1 calls to MAX-HEAPIFY takes time O(lg n)    
+
+The process will look like this: 
+
+Initial aray: [1,5,8,4,2,9,3,6,7]
+
+First we call "HEAPSORT", whos first line calls "BUILD-MAX-HEAP":
+
+"BUILD-MAX-HEAP" algorithm calls "MAX HEAPIFY" of nodes from floor(A.length/2) down to 1:
+
+                1
+        5               8
+    4       2       9       3
+  6   7          
+
+First we call "MAX HEAPIFY" on node 4 (floor(a.length/2)):
+  
+                1
+        5               8
+    7       2       9       3
+  6   4          
+
+Then we call "MAX HEAPIFY" on node 3:
+
+                1
+        5               9
+    7       2       8       3
+  6   4
+
+Then we call "MAX HEAPIFY" on node 2:
+
+                1
+        7               9
+    6       2       8       3
+  5   4
+  
+Then we call "MAX HEAPIFY" on node 1:
+  
+                9
+        7               8
+    6       2       1       3
+  5   4
+
+Once this last call to "MAX HEAPIFY" is complete, we exit "BUILD MAX HEAP" and execute the for loop in "HEAP SORT":
+
+for i = A.length downto 2 
+    exchange A[1] with A[i] 
+    A.heap-size = A.heap-size - 1 
+    MAX-HEAPIFY(A,1)
+
+i is set to 9, so the for loop goes from 9-2
+
+inside each iteration of the loop, we swap the root (A[1]) with A[i], and then reduce the size of the heap by 1. We call "MAX HEAPIFY" on the root each time we repeat the for loop:
+
+First loop: i = 9. We swap '9' with '4', remove 9 from the heap (so its protected), and then perform "MAX HEAPIFY" on 4
+
+                4
+        7               8
+    6       2       1       3
+  5   "9"
+
+                8
+        7               4
+    6       2       1       3
+  5   "9"
+  
+  Same process again: i = 8 (length is reduced by 1)
+  
+                5
+        7               4
+    6       2       1       3
+"8"   "9"
+
+                7
+        6               4
+    5       2       1       3
+"8"   "9"
+  
+EVENTUALLY, we end up with a fully sorted array.
+
+
+
+                        27 
+                17              3    
+            16      13      10      1     
+           5  7   12  4   8    9   0
+           
+           
+           
+                        27 
+                17              10    
+            16      13       3      1     
+           5  7   12  4   8    9   0
+
+
+                       27 
+                17              10    
+            16      13       9      1     
+           5  7   12  4   8    3   0
+           
+Change "MAX-HEAPIFY" to "MIN HEAPIFY"
+
+MIN-HEAPIFY(A,i) // A is the array to be inputted. i is the index of the key in the array that might be BIGGER (not smaller) than children
+    l = LEFT(i) 
+    r = RIGHT(i) // if i = 2, then l = 4, and r = 5. i = parent and l and r = two children
+if l <= A.heap-size and A[l] < A[i] //"if l<= A.heap-size" - checks to see left child (l) of i exists (if l is more than a.heap-size then it doesnt exist). If it does...then we check if left child (A[l]) is SMALLER than its parent (A[i])
+    smallest = l //if parent (i) has a left child (l), and the left childs key (A[l]) is bigger than its parents key (A[i]), then we set the left childs index (l) to the value of largest
+else smallest = i //if parent (i) DOESNT have a child (l), or the child (l) exists but its key (A[l]) is bigger than its parents key (A[i]), then we set the parents key(i) to the value of smallest
+if r <= A.heap-size and A[r] < A[largest] //first condition checks to see if right child (r) exists (it doesnt if r > heapsize). Second condition checks if key of right child (A[r]) is smaller than key of smallest out of key of parent and left child
+    smallest = r //if right child exists and its key is smaller than left child and parent, then key of right child set to smallest
+if smallest != i // if smallest key out of parent, left and right child IS NOT the parent, 
+    exchange A[i] with A[smallest] //then we swap the key of parent with the key of the smallest (left or right child)
+    MAX-HEAPIFY(A, smallest) //if the parents key if swapped with one of its children, then we have to make recursive call back to the function to make sure that the parents key is smaller than its two NEW children.
+                            //this algorithm repeats until the parent is the smallest compared with its children. if a parent has no children, then it will be set to smallest by default
+
+
+Worst case = T(n) =c(lgn +1) = Ө(lgn).
+The best case is that heap property is already in place so the time cost is constant Ө(1)
+
+
+To calculate the height of the tree:
+
+log2 (n + 1) -1
+
+eg: n = 15  
+    log2(16) - 1 = "3"
+
+15 nodes has a height of 3.
+
+
+minimum numbers of elements in a heap of height h = 2^h
+
+maximum numbers of elements in a heap of height h = 2^(h+1) -1
+
+At most how many nodes of height h are there in any n-element heap? upper bound(n/2^h)

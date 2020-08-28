@@ -1,0 +1,43 @@
+INSERTION-SORT(A) //this algorithm works by working through the array 1 key at a time and comparing it will the keys on its left
+    for j = 2 to A.length //j works through each card(apart from the first one)
+        key = A[j] //we duplicate the card that is being compared
+        i = j-1 //i represents all the cards we compare j with
+        while i > 0 and A[i] > key // while i is more than 0 and its key is more than j's key, we move is key up one space
+            A[i+1] = A[i]            
+            i = i-1 //we move from right to left comparing and shifting up until js position is found
+        A[i+1] = key //the current card being moved is put in its right slot
+
+INSERTION-SORT-DECREASING(A) //this algorithm works by working through the array 1 key at a time and comparing it will the keys on its left
+for j = 2 to A.length //j works through each card(apart from the first one)
+    key = A[j] //we duplicate the card that is being compared
+    i = j-1 //i represents all the cards we compare j with
+    while i > 0 and A[i] < key // while i is more than 0 and its key is LESS than j's key, we move is key up one space
+        A[i+1] = A[i]            
+        i = i-1 //we move from right to left comparing and shifting up until js position is found
+    A[i+1] = key //the current card being moved is put in its right slot
+
+- in place sorting algorithm (no auxiliary data structure) (a small amount of extra storage space for aux variables)
+
+- comparison sorts = type of sorting algorithm that only reads the list elements through a single
+                     abstract comparison operation (often a "less than or equal to" operator or a three-way comparison)
+
+"TIME COMPLEXITY:"
+Best case: the array is already in ascending order || T(n)=(c1+c2+c3+c4+c7)n- (c2+c3+c4+c7). The best case execution time is Ө(n).
+Worst case: array is in decending order || T(n) = an2 + bn + c  = Ө(n^2)
+Big Oh/Omega: O(n^2) - no more than some constant of n^2 , Ω(n) – no less than some constant of n.
+"P.27 TEXTBOOK FOR MORE INFO ON TIME ANALYSIS"
+
+------------------------------------------------------------------------------------------------------
+
+
+INSERTION-SORT-RECURSIVE(A,n)
+    if n > 1
+        INSERTION-SORT(A,n-1)
+        key = A[n]
+        i = n-1
+        while i > 0 and A[i] > key
+            A[i+1] = A[i]
+            i = i - 1
+        A[i + 1] = key
+
+

@@ -1,0 +1,70 @@
+MERGE(A, p, q, r)
+    n1 = q - p + 1 //
+    n2 = r - q  // find length of 2 subarrays
+    let L[1..n1 +1] and R[1..n2 +1]be new arrays //create 2 subarrays with size n/2 + 1 for sentinal
+    for i = 1 to n1         ///
+        L[i] = A[p + i - 1] ///populate left sub array [1 to n1] with A[p to q]
+    for j = 1 to n2         //
+        R[j] = A[q + j]     //populate right subarray [1 to n2] with A[q + 1 to r]
+    L[n1+1] = infinity      ///
+    R[n2+1] = infinity      ////add sentinals
+    i=1         //
+    j=1         //initialise i and j so they can run through subarrays for comparison
+    for k = p to r         //for loop to run through original A from p to r (start to end)
+        if L[i] <= R[j]     
+            A[k] = L[i] //if L[1] >= R[1]...A[1] = L[1] (L[1] is smaller)
+            i = i + 1  //go to next value in L for comparison ...L[2]
+        else A[k] = R[j]  //else make A[1] = R[1] (because R[1] was smaller)
+            j = j + 1     //go to next value in R for comparison ...R[2]
+
+MERGE-SORT(A, p, r)             
+    if p < r
+        q = |_ (p + q)/2 _|       O(1)
+        MERGE-SORT(A, p, q)       T(n/2)
+        MERGE-SORT(A, q + 1, r)   T(n/2)
+        MERGE(A, p, q, r)         O(n)
+
+"TIME COST"
+
+T(n) {          c, if n = 1   //if array is 1 length T(n) = O(1)
+     {2T(n/2) + cn, if n > 1  //using recurrence tree - we get Ө(nlgn)
+
+height of recurrence tree = logn
+base of logn = 2
+time cost at each depth = cn //constant
+
+each subsequence is divided into 2 subsequences of size = n/2
+
+subsequences must be of size n=1 to be solved in straight forward manner
+
+The MERGE (A, p, q, r): A=array, p=first element, q=middle element, r=last element
+
+The sentinal cards: there is a sentinal at the end of each subdivision.
+                    when that is exposed, all the cards in the other subsequence must be smaller..
+                    so they are automatically added to the original array
+                    lines 13-18
+
+
+
+MERGE-WITHOUT-SENTINALS(A, p, q, r)
+    n1 = q - p + 1 //
+    n2 = r - q  // find length of 2 subarrays
+    let L[1..n1] and R[1..n2]be new arrays //create 2 subarrays with size n/2
+    for i = 1 to n1         ///
+        L[i] = A[p + i - 1] ///populate left sub array [1 to n1] with A[p to q]
+    for j = 1 to n2         //
+        R[j] = A[q + j]     //populate right subarray [1 to n2] with A[q + 1 to r]
+    i=1         //
+    j=1         //initialise i and j so they can run through subarrays for comparison
+    for k = p to r         //for loop to run through original A from p to r (start to end)
+        while i <= n1 and j <= n2
+            if L[i] <= R[j]     
+                A[k] = L[i] //if L[1] >= R[1]...A[1] = L[1] (L[1] is smaller)
+                i = i + 1  //go to next value in L for comparison ...L[2]
+            else A[k] = R[j]  //else make A[1] = R[1] (because R[1] was smaller)
+                j = j + 1     //go to next value in R for comparison ...R[2]    
+        if i <= n1  //right subarray empty
+            A[k] = L[i]
+            i = i + 1
+        else A[k] = R[j] // left subarray empty
+             j = j + 1

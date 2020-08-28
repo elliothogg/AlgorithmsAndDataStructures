@@ -1,0 +1,39 @@
+SUM (n)                            Cost   times       
+
+1   for r = 1 to n                  c1     n+1           
+2       for c=1 to n                c2     n*(n+1)          
+3           sum = sum+1             c3     n^2          
+4   return sum                      c4     1
+
+T(n)= c1(n+1)+c2(n2+n)+c3*n2 + c4 = an2+bn+c
+
+
+MAXIMUM(A,n)	            Cost	    Times - worst case	Times - best case
+1 max = A[1]	            c1	        1	                1
+2 for index = 2 to n	    c2	        n - 1	            n - 1
+3     if A[index] > max	    c3	        n - 1	            n - 1
+4         max = A[index]	c4	        n - 1	            0
+5 return max	            c5	        1	                1
+
+
+Worst case:
+
+T(n) = c1 + c2(n-1) + c3(n-1) + c4(n-1) + c5 = an + b
+
+Best case:
+
+T(n) = c1 + c2(n-1) + c3(n-1) + c5 = an + b
+
+
+BINARY-SEARCH(A, start, end, k)
+    midpoint = |_ A.length _|
+    if midpoint != A[k]
+        if midpoint > k
+            BINARY-SEARCH(A, start, midpoint - 1, k)
+        else if midpoint < k
+            BINARY-SEARCH(A, midpoint + 1, end, k)
+    return midpoint
+
+T(n) =T(n/2) +c =T(n/2^2) +2c= T(n/2^3) +3c=....=T(1) +  clgn, 
+so in the worst case O(lgn), 
+best case happens if the element is in the middle so O(1).

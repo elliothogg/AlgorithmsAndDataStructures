@@ -1,0 +1,114 @@
+LINKED LISTS
+
+"Array linear order" - determined by indices
+"linked list linear order" - determined by prev/next pointers
+"head" - first element in linked list
+"NIL" - null, holds no value
+"Empty Linked List" - if head = nil/null
+"Singly linked list" - elements only have next pointers
+"doubly linked list" - elements have next and prev pointers
+"circular list" - last elements next pointer points to head || 
+                  heads prev pointer points to last element
+
+"Doubly linked list with Sential" + simplifys boundary conditions
+                                  - extra memory
+
+LIST-SEARCH(L, k)
+    x = L.head
+    while x != k && x != null
+        x = x.next
+    return x
+
+Worst case = O(n) //key is the last item in the list
+Best case = O(1) //key is the first item in the list
+
+
+LIST-INSERT(L, x) //key is already set inside x
+    x.next = L.head //apending x onto list
+    if L.head != nill //if head isnt null, point it back to x
+        L.head.prev = x
+    L.head = x // change head to x
+    x.prev = null //make x prev null. X.next WILL ALREADY BE SET TO NULL IF IT IS EMPTY
+
+Worst case = O(1)
+Best case = O(1)
+
+LIST-DELETE-WITH-POINTER(L, x) //with given pointer to element
+    if x.prev != null
+        x.prev.next = x.next
+    else L.head = x.next
+    if x.next != null
+        x.next.prev = x.prev
+
+LIST-DELETE-WITH-KEY(L, k) //with key, need to search first
+    x = LIST-SEARCH(L, k)
+    if x.prev != null
+    x.prev.next = x.next
+    else L.head = x.next
+    if x.next != null
+    x.next.prev = x.prev
+
+Worst case = Ө(n) when given a key, as need to find it first
+Best case = O(1) with given element
+
+----------------------------------------------------------------
+WITH SENTINALS
+
+LIST-DELETE(L, x)
+    x.prev.next = x.next
+    x.next.prev = x.prev
+
+LIST-SEARCH(L, k)
+    x = L.nil.next
+    while x! k && x! L.nil
+        x = x.next
+    return x
+
+LIST-INSERT(L, x)
+    x.next = L.nil.next
+    L.nil.next.prev = x
+    L.nil.next = x
+    x.prev = L.nil
+
+---------------------------------------------------------------
+Singly Linked List
+
+INSERT-WITHOUT-SENTINAL(L, x)
+    x.next = L.head
+    L.head = x
+
+INSERT-WITH-SENTINAL(L, x)
+    x.nil.next = x.next
+    L.nil.next = x
+    
+For Delete, we cannot have an algorithm with O(1) time. This is for singly list, we have no knowledge of the previous object that x points to. Therefore, in order to find the previous object, we need to use a search function together with a temporary object that helps to keep track of the index.
+
+"SINGLY LINKED LIST AS STACK"
+
+SINGLY-LIST-STACK-PUSH(S, x)
+    x.next = S.top
+    S.top = x
+
+SINGLY-LIST-STACK-POP(S)
+    if S.top == null
+        return Error "underflow"
+    else value = S.top
+         S.top.next = S.top
+         return value
+    
+"SINGLY LINKED LIST AS QUEUE"
+
+SINGLY-LIST-ENQUEUE(Q, x)
+    position = Q.head
+    while position.next != null
+        position = position.next
+    position.next = x
+    x.next = null
+
+SINGLY-LIST-DEQUEUE(Q)
+    if Q.head == null
+        return Error "underflow"
+    else value = Q.head
+        Q.head.next = Q.head
+        return value
+    

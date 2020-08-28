@@ -1,0 +1,88 @@
+General operations on a dynamic set S include:
+
+Dynamic set                 Stack           Queue               Linked List
+SEARCH (S, k)                                                   LIST-SEARCH(L, k) //k = key
+INSERT (S, x)               PUSH(S, x)      ENQUEUE(Q, x)       LIST-INSERT(L, k)
+DELETE (S, x)               POP(S, x)       DEQUEUE(Q, x)       LIST-DELETE(L, k)
+MINIMUM (S)
+MAXIMUM (S)
+SUCCESSOR (S, x)
+PREDECESSOR (S, x)
+
+----------------------------------------------------------------------
+STACKS
+
+- "LIFO" - Last In First Out
+- "Key Operations" - PUSH (insert) & POP (delete)
+- "S.top" = the most recently inserted element
+- "Stack Underflow" = when S.Top = 0 //check using STACK-EMPTY(S)
+- "Stack Overflow" = when S.Top >= Array.length //if we have array of 10 and S.top is 10 or more
+
+STACK-EMPTY(S)
+    if S.top == 0
+        return true
+    else return false
+
+PUSH(S,x) //S.top = 0 on empty stack
+    S.top = S.top + 1
+    S[S.top] = x
+
+POP(S)
+    if STACK-EMPTY == true
+        Error "Underflow"
+    else Value = S[S.top]
+         S.top = S.top - 1
+         return Value
+
+All 3 operations take O(1) time.
+
+"Real-life Applications" - stack of plates, row of supermarket trollies.
+
+"Direct Applications" - undo/redo computer programs, back/forward web browsers, 
+                        music playlists ordered by date added
+-------------------------------------------------------------------------------
+QUEUES
+
+- "FIFO" - First In First Out
+- "Key Operations" - ENQUEUE(insert) & DEQUEUE (delete)
+- "Array/Circular Fashion" - To make circular, prev pointer of head points to tail
+                             and next pointer of tail points to head
+- "Q.head" - points to the queues head
+- "Q.tail" - points to the slot after the last key that was added
+- "Q.length" - length of queue
+- Queue is empty when Q.head = Q.tail = "underflow"
+- Queue is full when Q.head = Q.tail + 1 = "overflow"
+- maximum elements in queue = n - 1 elements
+
+QUEUE-FULL(Q)
+    if Q.tail == Q.length && Q.head == 1
+        Return true
+    else if Q.head == Q.tail + 1
+        return true
+    else return false
+
+ENQUEUE(Q, k)
+    if QUEUE-FULL == true
+        return Error "overflow"
+    Q[Q.tail] = k
+    if Q.tail == Q.length
+        Q.tail = 1
+    else Q.tail = Q.tail + 1
+        
+DEQUEUE(Q)
+    if Q.head == Q.tail
+        Return Error "underflow"
+    x = Q[Q.head]
+    if Q.head == Q.length
+        Q.head = 1
+    else Q.head = Q.head + 1
+    return x
+
+Both operations take O(1) time.
+
+"Direct applications of queues" - keyboard buffer, Spotify "queue" songs feature, printer queues
+
+Front (Q) //returns key at front of queue without removing it
+    if Q.head == Q.tail
+        Return Error "underflow"
+    else return Q[Q.head]

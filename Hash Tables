@@ -1,0 +1,107 @@
+---------------------------------------------------------------------------
+DIRECT ADDRESS TABLES
+
+Each position or slot corresponds to a key in the universe.
+
+Slot K = Key K
+
+"U" - universe of keys. //Direct address works well when universe is small
+"Running time" - Insert, Search, Delete = O(1)
+
+//if the universe U is large, storing a table of size |U| is impractical and wastes a lot of space
+
+-------------------------------------------------------------------------------
+HASH TABLES
+    
+"Hash Function" - A 
+
+
+OPEN ADDRESSING
+
+HASH-INSERT (T,k)
+    i = 0
+    repeat
+        j = hash(k,i) //j = the "slot"
+        if T[j] == NIL
+            T[j] = k
+            return j
+        else i = i + 1
+    until i == m // **** m = the length of the hash table!! ****
+    error "overflow"
+
+
+HASH-SEARCH (T,k)
+    i = 0
+    repeat
+        j = hash(k,i)
+        if T[j] == k
+            return j
+        else i = i + 1
+    until T[j] == nil or i == m
+    return NIL
+
+HASH-DELETE (T,k)
+    j = HASH-SEARCH (T,k)
+    if j != NIL
+        T[j] = DELETED
+    else error  "not found"
+
+
+HASH-INSERT WITH "DELETED" functionality (T,k)
+    i = 0
+    repeat
+        j = hash(k,i) //j = the "slot"
+        if T[j] == NIL or DELETED
+            T[j] = k
+            return j
+        else i = i + 1
+    until i == m // **** m = the length of the hash table!! ****
+    error "overflow"
+
+
+
+
+What is the expected number of probes in an unsuccessful search? 1/(1-load factor)
+
+Java Hashtable: Closed address- uses chaining
+                find = get
+                insert = put
+                delete = remove  
+
+
+Consider a dynamic set S that is represented by a direct-address table T of length m. 
+Write pseudocode for a procedure (say MAX-DAT (T, m)) that finds the maximum element of S.
+
+                // T[m] is the last "slot" in the table, but will probably = nill (be empty!), we need to go from
+MAX-DAT (T, m)  // m and move backwards until we find the first "non-nill" "slot"
+    i = 0    
+    repeat
+        j = m - i
+        if T[j] != null
+            return T[j]
+        else i = i - 1
+    until i == 0
+    error "empty table"
+
+                
+Strengths / Weaknesses of Hashing with chaining/open addressing    
+
+Hashing with chaining
+
++ insert times will always be constant
++ delete time will also be quick if doubly linked list
++ avoids clustering
+
+- can potentially cause long search/delete times in worst case if a lot of collisions happen
+- more memory usage due to pointers
+
+Hashing with open addressing
+
++ simpler to work with
++ quadratic probing can lead to fewer collisions
++ less memory
+
+- clustering can occur
+- search/delete/insert times can be more than constant
+
+

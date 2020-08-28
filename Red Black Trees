@@ -1,0 +1,143 @@
+BALANCES BST TREE
+
+Similar to BST but use properties than allow them to be balanced, avoiding worst case operation times that exist on really unbalanced BST (O(n))
+
+Red-Black trees are balanced, meaning operations take O(logn) in worst case.
+3
+Label every node as RED or BLACK (using true/false)
+
+"Attributes of a node" - color, parent, l.child, r.child, key
+
+"internal nodes" - the only nodes that hold keys
+
+"external nodes" = different to normal BST TREES. external node is a null node that has no key
+
+"sentinal T.nil" - all pointers to null are now replaced by a single sentinal
+
+"black height" - Number of black nodes on any path from the node to the sentinal (null). 
+                 Does not include current node but includes sentinal(null leaf at bottom)
+
+"IMPOSSIBLE HEIGHT" = 2 x black height + 1
+
+"Maximum height of RBT" = 2 * log2(n+1)
+
+"Maximum number of black nodes in any root-null path" = log2(n+1)
+
+"Minimum number of internal nodes RBT" =  2^bh - 1
+
+"Maximum number of internal nodes RBT" = 2^2*bh  - 1
+
+"running time of SEARCH, MINIMUM, MAXIMUM, SUCCESSOR and PREDECESSOR" - O(logn)
+-------------------------------
+        //RULES
+
+- Every node is either red or Black
+
+- Root has to always be Black
+
+- Every leaf (Nulls) is BLACK
+
+- If a node is red, both its children are black  
+
+- Every path from root-leaf has same number of BLACK nodes
+
+--------------------------------------------
+
+// REBALANCE
+
+Black Aunty/uncle: Rotate
+
+Red Aunty: Colour Flip
+
+
+After Rotation                 After Colour Flip
+
+     Black                         "Red"           
+   /       \                      /     \                        
+"red       red"                Black     Black                    
+
+
+-------------------------------------------------
+//LEFT & RIGHT ROTATE
+
+      6                                     4
+    /   \    <--------------------         /  \        
+   4     7     LEFT-ROTATE(T, x)          3    6      
+  / \                                         /  \            
+ 3   5        ------------------->           5    7              
+               RIGHT-ROTATE(T, y)                               
+
+
+LEFT-ROTATE (T, x)     "O(1) running time"
+    y = x.right             //set y
+    x.right = y.left        //turn y’s left subtree into x’s right subtree
+    if y.left != T.nil
+        y.left.p = x
+    y.p = x.p           //link x’s parent to y
+    if x.p == T.nil
+        T.root  =  y
+    else if x == x.p.left
+        x.p.left = y
+    else x.p.right = y
+        y.left = x          //put x ony’s left
+        x.p = y
+
+RIGHT-ROTATE (T, x)     "O(1) running time"  p.313 if unclear
+    x = y.left             //set x
+    y.left = x.right        //turn x’s left subtree into y’s right subtree
+    if x.right != T.nil
+        x.right.p = y
+    x.p = y.p           //link y’s parent to x
+    if y.p == T.nil
+        T.root = x
+    else if y == y.p.left
+        y.p.left = x
+    else y.p.left = x
+        x.right = y          //put y on x’s left
+        y.p = x
+
+
+//   TREE-INSERT(BST) vs RB-TREE-INSERT
+- In RB insert we set nodes children to T.nil
+- In RB insert we set new node to "RED"
+-              we call INSERT-FIXUP to preserve RB TREE properties
+- All instances of "null" are replaced by "T.null"   
+
+RB-INSERT(T, z) "O(logn) running time" //assume key is already set for z
+    y = T.nil
+    x = T.root 
+    while x != T.nil
+        y = x
+        if z.key < x.key
+        x = x.left 
+        else x = x.right
+    z.p = y 
+    if y == T.nil
+        T.root = z 
+    else if z.key < y.key 
+        y.left = z
+    else y.right = z
+    z.left = T.nil //set 2 children of z to T.nil
+    z.right = T.nil
+    z.color = RED  // set color of new node to red
+    RB-INSERT-FIXUP(T, z) // call fixup to restore properties of tree
+        
+
+    RB-INSERT-FIXUP(T, z) "O(logn) running time"
+    while z.p.color == RED 
+        if z.p == z.p.p.left
+            y = z.p.p.right 
+            if y.color == RED       //check uncles colour. if red then we do "color flip"
+                z.p.color = BLACK   //
+                y.color = BLACK     //
+                z.p.p.color = RED   //
+                z = z.p.p           //
+            else 
+                if z == z.p.right  //if uncle is black, then we skip to this part and do a 2 rotations(only 2 if z is a right child)
+                    z = z.p
+                    LEFT-ROTATE(T, z) 
+                z.p.color = BLACK      //if uncle is black but z is a left child then we just do RIGHT-ROTATE
+                z.p.p.color = RED 
+                RIGHT-ROTATE(T, z.p.p) //z.p.p!! WATCH OUT FOR THIS
+        else (go back to line 2 but swap all “rights” with “lefts” and visa versa //including rotates!!
+    T.root.color = BLACK  //ensure root is black

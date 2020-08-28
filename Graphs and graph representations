@@ -1,0 +1,172 @@
+"vertex" = node on graph
+"edge" = lines between vertex
+"directed edge" = an edge that has a 1 way nature(arrow)
+"undirected edge" = an edge that has a 2 way nature(line)
+"directed/undirected graphs" = graphs that eith have all directed or all undirected edges
+"incident from; incident to" = terms used for directed edges. edge (u,v) is incident from (leaves) u and is incident to (enters) v. 
+"incident on" = term for undirected edge. edge (u,v) is incident(connects) on vertices u and v.
+"adjacent" = if a node is reachable from another node then it is adjacent to it
+"out-degree(of a vertex)" = number of edges leaving a vertex
+"In-degree(of a vertex)" = number of edges entering a vertex
+"degree(of a vertex)" = total of the two above
+"cycle" = journey on graph which starts/ends same vertex
+"simple cycle" = ^^ + all stops on journey are distinct
+"acyclic" = a graph with no cycles
+special cases of graphs:
+"tree" = undirected, acyclic, connected
+"forest" = undirected, acyclic but possibly disconnected
+"Acyclic Graph(DAG)" = A graph that contains a cycle (a "shape" with all sides connected)
+ 
+
+Two representation of graphs: "Adjacency lists" || "Adjacency Matrices"
+
+G = (v,e) //G = graph and is ordered pair of vertices(v) and edges (e)
+
+//edges can be directional (ordered pairs) or nondirectional (unordered pairs)
+e.g. Edge(V1, V2) would direct v1 to v2, with v1 being the start and v2 being the destination
+     Edge{V1, V2} would be a nondirectional edge, you can go both ways
+
+Dense - too many edges (close to number of vertices^2) ->> USE "Adjacency Matrix"
+Sparse - too few edges (close to number of vertices) --> USE "Adjacency List"
+
+simple path - a walk in which no vertices (and thus no edges) are repeated
+trail - a walk in which no edges are repeated
+
+"Strongly connected graph" (has to be directed) - if there is a path from any vertex to any other vertex (https://www.youtube.com/watch?v=AfYqN3fGapc)
+"conneceted" (undirected) - same as above but for undirected graph (nondirectional edges)
+
+weakly connected - when we swap directed for undirected edges and it makes the graph connected
+
+closed walk - starts and ends at same vertex
+
+simple cycle - no repetition other than start and end
+----------------------------------------------------------------------------
+
+"2 Standard ways to represent graphs" - Adjacency list OR Adjacency Matrix
+//Adjacency list                                  //Adjacency Graph
++compact way to represent sparse graphs           + when graph is Dense
++better choice when E > V^2 as saves Space        + E is close to V^2
++simple                                           + Need to tell quickly if there is an edge
+                                                    connecting two vertices
+                                                  
+
+----------------------------------------------------------------------------
+ADJACENCY MATRIX
+
+//Vertex List            //Adjacency Matrix                //Undirected Graph
+
+0  A                     0  1  2  3  4  5  6  7         A --------- B
+1  B                  0  0  1  1  1  0  0  0  0        /  \       /   \
+2  C                  1  1  0  0  0  1  1  0  0       C    D     E     F
+3  D                  2  1  0  0  0  0  0  1  0        \  /       \   /
+4  E                  3  1  0  0  0  0  0  0  1         G --------- H
+5  F                  4  0  1  0  0  0  0  0  1
+6  G                  5  0  1  0  0  0  0  0  1    
+7  H                  6  0  0  1  0  0  0  0  1    
+                      7  0  0  0  1  1  1  1  0                                        
+//vertex list shows the index of each vertex(node)
+
+//Adjacency matrix tells us which vertices(nodes) are adjacent to one another.
+// value of 1 means they are connected by an edge. 0 means no connection
+e.g. the first row tells us all the vertices that are adjacent to node 0 = A.
+     A is adjacent to node 1, 2, and 3 ---> B, C, and D.
+     Looking at graph, we can see that this is correct.
+
+(with undirected graphs, we only need half of the matrix to plot the graph((the matrix is diagonally symetric))
+
+"Weighted Edges" - we can insert the weights of the edges in place of the 1's (1's tell us if edge exists between vertices)
+                   if there is no number in the matrix, then the two vertices arent connected
+
+//TIME COST
+
+"Time to list all vertices adjacent to u(finding adjacent nodes)": involves searching the vertex list and the adjacency matrix. Worst case = O(v) + O(v)
+e.g.  if we want to find what nodes are adjacent to A, we first have to find its index by searching the
+      vertex list, then we search the relevant "row"(subarray) of the Adjacency Matrix to find all the adjacent nodes.
+      both of these are have length = ammount of vertices. meaning worst case search is O(v) + O(v) = O(v)
+
+|"Time to determine if (u, v)є E(checking 2 nodes for adjacency)" if we already have indices - O(1)
+                                 if we have to find indices, we search Vertex list. Worst case is O(v) + O(1) = O(v)
+
+
+"Space used" (directed) = Ѳ(v^2)
+             (undirected) = Ѳ(v^2) / 2  - we can only store half the data(as symetrical - see above). we usually store it all though.
+
+--------------------------------------------------------------------------------------
+ADJACENCY LIST
+
+Uses an array of linked lists to show which vertices each vertex is connected to.
+There is one linked list for each vertex in the graph...
+
+adj = number of vertices
+
+//directed graph           adjacency list
+
+1 ----> 2 ---> 3           [1] -> 2, 4
+|       |                  [2] -> 3, 5
+|       |                  [3]
+⌄       ⌄                  [4]
+4 <---- 5                  [5] -> 4
+
+
+//undirected graph         adjacency list
+
+1 ----- 2 --- 3            [1] -> 2, 4
+|       |                  [2] -> 1, 3, 5
+|       |                  [3] -> 2
+|       |                  [4] -> 1, 5
+4 ----- 5                  [5] -> 2, 4
+
+
+Sum of the lengths of all linked lists for directed graph = number of vertices
+                                       for undirected graph = number of vertices * 2
+
+"Weighted graphs" - easy to add to adjacency list. Store it in the linked list elements.
+
+(with undirected graphs, you technically dont need the whole list to map the graph)
+
+If vertices were characters and not numbers, you would need a "vertex list" (see above)
+
+"Space used"(both directed/undirected) = Ѳ(V + E) vertices + edges
+             (undirected: V + 2E) 2E becomes E     
+             
+//TIME COST
+
+"list all vertices adjacent to u(some vertex)" = undirected Θ(degree(u)), directed: Θ(out-degree(u))
+
+"Time to determine if (u, v) є E (checking 2 nodes for adjacency)":
+          undirected: O(degree(u)), directed: O(out-degree(u))
+
+
+-----
+
+Undirected graph - maximum number of edges = n(n-1) /2
+
+
+Give an adjacency-list representation for a complete binary tree on 7 vertices. 
+Give an equivalent adjacency-matrix representation. 
+Assume that vertices are numbered from 1 to 7 as in a binary heap.
+
+//complete binary tree (undirected edges)
+          1
+       2     3
+     4   5  6  7
+
+//adjacency list
+
+[1] -> 2,3
+[2] -> 1,4,5
+[3] -> 1,6,7
+[4] -> 2
+[5] -> 2
+[6] -> 3
+[7] -> 3
+
+//adjacency matrix
+   1  2  3  4  5  6  7
+1  0  1  1  0  0  0  0
+2  1  0  0  1  1  0  0 
+3  1  0  0  0  0  1  1
+4  0  1  0  0  0  0  0
+5  0  1  0  0  0  0  0
+6  0  0  1  0  0  0  0
+7  0  0  1  0  0  0  0
